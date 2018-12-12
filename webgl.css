@@ -1,0 +1,22 @@
+canvas {
+    min-height: 100%;
+    height: 100%;
+	border: 2px solid black;
+	background-color: black;
+}
+video {
+	display: none;
+}
+
+html,body{
+    height:100%;
+}
+
+textarea{
+    min-height:45%;
+    height:600px;
+}
+.full-height{
+    min-height:100%;
+    height:100%
+}
