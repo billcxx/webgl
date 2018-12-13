@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>WebGL Demo</title>
-    <link rel="stylesheet" href="webgl/webgl.css" type="text/css" />
+    <link rel="stylesheet" href="webgl.css" type="text/css" />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -80,6 +80,7 @@
     function reload() {
       console.log("reredner");
       readTextArea("paramsarea");
+      update();
     }
 
     function getOldSelect() {
@@ -88,14 +89,14 @@
       console.log("old select is ", previousSelect);
     }
 
-    function getURLPath(){
-        var sPageURL = window.location;
-        return sPageURL.origin+sPageURL.pathname;
+    function getURLPath() {
+      var sPageURL = window.location;
+      return sPageURL.origin + sPageURL.pathname;
     }
     function GetURLParameter(sParam) {
       var sPageURL = window.location.search.substring(1);
       if (sPageURL == "") {
-          console.log('without select parameter');
+        console.log("without select parameter");
         return "three";
       } else {
         var sURLVariables = sPageURL.split("&");
@@ -112,21 +113,21 @@
 
     function initSelect() {
       console.log("init");
-      var sel=document.getElementById('rendererSelect');
-    //   var selectText = sel.options[sel.selectedIndex].text;
-    var canvas = document.body.getElementsByTagName("canvas");
+      var sel = document.getElementById("rendererSelect");
+      //   var selectText = sel.options[sel.selectedIndex].text;
+      var canvas = document.body.getElementsByTagName("canvas");
 
       var select = GetURLParameter("select");
       canvas[0].id = select;
       if (select == "webgl") {
-        sel.selectedIndex=0;
+        sel.selectedIndex = 0;
         webgl();
       } else if (select == "three") {
-        sel.selectedIndex=1;
+        sel.selectedIndex = 1;
 
         three();
       } else if (select == "babylon") {
-        sel.selectedIndex=2;
+        sel.selectedIndex = 2;
         babylon();
       }
     }
@@ -140,11 +141,11 @@
     // }
 
     function switchRenderer() {
-        var select = document.getElementById("rendererSelect");
+      var select = document.getElementById("rendererSelect");
       var selectText = select.options[select.selectedIndex].text;
       console.log(getURLPath);
       if (selectText == "webgl") {
-        window.location = getURLPath()+'?select=webgl'
+        window.location = getURLPath() + "?select=webgl";
         webgl();
         // var script = document.createElement('script');
         // script.src='webgl/webgl.js'
@@ -157,7 +158,7 @@
         // document.appendChild(script1);
       } else if (selectText == "three") {
         console.log("correctly to three");
-        window.location = getURLPath()+'?select=three'
+        window.location = getURLPath() + "?select=three";
 
         three();
         // var script = document.createElement('script');
@@ -165,7 +166,7 @@
         // script.id='three-js'
         // document.appendChild(script);
       } else {
-        window.location = getURLPath()+'?select=babylon'
+        window.location = getURLPath() + "?select=babylon";
 
         babylon();
         // var script = document.createElement('script');
@@ -176,17 +177,20 @@
     }
   </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.js"></script>
-  <script src="https://cdn.babylonjs.com/babylon.js"></script>
-  <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
   <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
-
-  <script src="file.js"></script>
+  <script src="js/file.js"></script>
+  <script src="parameters.js"></script>
+  <script src="js/Parser.js"></script>
+  <script src='js/Detector.js'></script>
 
   <script id="webgl-matrix" src="webgl/gl-matrix.js"></script>
   <script id="webgl-js" src="webgl/webgl.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.js"></script>
+  <script src="three/js/controls/TrackballControls.js"></script>
   <script src="three/3d.js"></script>
 
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
   <script src="babylon/bab.js"></script>
 </html>
