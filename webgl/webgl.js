@@ -1,8 +1,9 @@
-function clearWebgl(){
-  const canvas = document.querySelector('#webgl');
-  const gl = canvas.getContext('webgl', { antialias: true, stencil: true });
-  gl.clear();
-}
+// function clearWebgl(){
+//   const canvas = document.querySelector('#webgl');
+//   const gl = canvas.getContext('webgl', { antialias: true, stencil: true });
+//   // gl.clear();
+//   gl.deleteProgram(programInfo.program);
+// }
 
 function webgl(){
 var cubeRotation = 0.0;
@@ -61,8 +62,20 @@ function main() {
     drawScene(gl, programInfo, buffers, deltaTime);
 
     requestAnimationFrame(render);
+
+
+
+    // var select = document.getElementById("rendererSelect");
+    // var selectText = select.options[select.selectedIndex].text;
+  
+    // if (selectText!='webgl') {
+    //   // console.log('webgl deleted');
+    //   gl.deleteProgram(programInfo.program);
+    // } 
+
   }
   requestAnimationFrame(render);
+
 }
 
 //

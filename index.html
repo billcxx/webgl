@@ -1,159 +1,192 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>WebGL Demo</title>
-    <link rel="stylesheet" href="webgl/webgl.css" type="text/css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="webgl/webgl.css" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
   </head>
 
-  <body onload='initSelect()'>
+  <body onload="initSelect()">
     <div class="full-height row ">
-        <div class="col-sm">
-            <div class="row">
-        <form class='col-6'>
-                <div class="form-group">
-                        <label for="exampleFormControlSelect1">Select engine</label>
-                        <select class="form-control" id="rendererSelect" onfocus='getOldSelect()'  onchange='switchRenderer()'>
-                          <option>webgl</option>
-                          <option selected>three</option>
-                          <option>babylon</option>
-                        </select>
-                      </div>
-        </form>
-                <button class='col-6' type='button' onclick='reload()'>Re-render</button>
+      <div class="col-sm">
+        <div class="row">
+          <form class="col-6">
+            <div class="form-group">
+              <label for="exampleFormControlSelect1">Select engine</label>
+              <select
+                class="form-control"
+                id="rendererSelect"
+                onfocus="getOldSelect()"
+                onchange="switchRenderer()"
+              >
+                <option>webgl</option>
+                <option>three</option>
+                <option>babylon</option>
+              </select>
+            </div>
+          </form>
+          <button class="col-6" type="button" onclick="reload()">
+            Re-render
+          </button>
         </div>
-        <canvas class='col-sm' id="three"></canvas>
+        <canvas class="col-sm" id="webgl"></canvas>
+      </div>
+      <div class="col-sm full-height">
+        <div class="row">
+          <div class="col-4">
+            <div class="card full-height">
+              <p class="card-title">Parameters</p>
+              <input type="file" id="paramsinput" name="param" />
+              <textarea id="paramsarea"></textarea>
+              <input type="text" id="paramsname" />
+              <button onclick="saveParameters()">Save parameter file</button>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card full-height">
+              <p class="card-title">Vertex shader</p>
+              <input type="file" id="vsinput" name="vs" />
+              <textarea id="vertexarea"></textarea>
+              <input type="text" id="vertexname" />
+              <button onclick="saveVertexShader()">
+                Save vertex shader file
+              </button>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card full-height">
+              <p class="card-title">Fragment shader</p>
+              <input type="file" id="fsinput" name="fs" />
+              <textarea id="fragmentarea"></textarea>
+              <input type="text" id="fragmentname" />
+
+              <button type="button" value="save" onclick="saveFragmentShader()">
+                Save fragment shader file
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-        <div class="col-sm full-height">
-            <div class="row">
-            <div class="col-4">
-            <div class='card full-height'>
-                <p class='card-title'>Parameters</p>
-                <input type="file" id="paramsinput" name='param'/>
-                <textarea  id='paramsarea'></textarea>
-                <input type='text' id='paramsname'/>
-                <button onclick='saveParameters()'>Save parameter file</button>
-            </div>
-        </div>
-        <div class="col-4">
-
-            <div class='card full-height'>
-                <p class='card-title'>Vertex shader</p>
-                <input type="file" id="vsinput" name='vs' />
-                <textarea id='vertexarea'></textarea>
-                <input type='text' id='vertexname'/>
-                <button onclick='saveVertexShader()'>Save vertex shader file</button>
-
-            </div>
-        </div>
-        <div class="col-4">
-
-            <div class='card full-height'>
-                <p class="card-title">Fragment shader</p>
-                <input type="file" id="fsinput" name='fs'/>
-                <textarea id='fragmentarea'></textarea>
-                <input type='text' id='fragmentname'/>
-
-                <button type='button' value='save' onclick='saveFragmentShader()'>Save fragment shader file</button>
-
-            </div>
-        </div>
-            </div>
-
-        </div>
-    </div>
-
-
-
-
-
-
   </body>
   <script>
+    var previousSelect = "webgl";
+    function reload() {
+      console.log("reredner");
+      readTextArea("paramsarea");
+    }
 
-      var previousSelect="webgl";
-        function reload(){
-          console.log('reredner');
-          readTextArea('paramsarea');
+    function getOldSelect() {
+      var select = document.getElementById("rendererSelect");
+      previousSelect = select.options[select.selectedIndex].text;
+      console.log("old select is ", previousSelect);
+    }
+
+    function getURLPath(){
+        var sPageURL = window.location;
+        return sPageURL.origin+sPageURL.pathname;
+    }
+    function GetURLParameter(sParam) {
+      var sPageURL = window.location.search.substring(1);
+      if (sPageURL == "") {
+          console.log('without select parameter');
+        return "three";
+      } else {
+        var sURLVariables = sPageURL.split("&");
+
+        console.log(sURLVariables);
+        for (var i = 0; i < sURLVariables.length; i++) {
+          var sParameterName = sURLVariables[i].split("=");
+          if (sParameterName[0] == sParam) {
+            return sParameterName[1];
+          }
         }
+      }
+    }
 
-        function getOldSelect(){
-            var select=document.getElementById('rendererSelect');
-           previousSelect=select.options[select.selectedIndex].text;
-           console.log('old select is ', previousSelect);
+    function initSelect() {
+      console.log("init");
+      var sel=document.getElementById('rendererSelect');
+    //   var selectText = sel.options[sel.selectedIndex].text;
+    var canvas = document.body.getElementsByTagName("canvas");
 
-        }
-        
-        function initSelect(){
-            console.log('init');
-            // webgl();
-            three();
-        }
+      var select = GetURLParameter("select");
+      canvas[0].id = select;
+      if (select == "webgl") {
+        sel.selectedIndex=0;
+        webgl();
+      } else if (select == "three") {
+        sel.selectedIndex=1;
 
-        function switchRenderer(){
-            var select=document.getElementById('rendererSelect');
-            var selectText=select.options[select.selectedIndex].text;
-            var canvas=document.body.getElementsByTagName('canvas');
-            canvas[0].id = selectText;
-            if (previousSelect=='webgl') {
-                clearWebgl();
-            //     var script = document.getElementById('webgl-matrix');
-            //     document.removeChild(script);
-            //     var script1 = document.getElementById('webgl-js');
-            //     document.removeChild(script1);
-            } else if (previousSelect=='three'){
-                clearThree();
-            //     var script = document.getElementById('three-js');
-            //     document.removeChild(script);
-            } else {
-            //     var script = document.getElementById('babylon-js');
-            //     document.appendChild(script);
-            }
+        three();
+      } else if (select == "babylon") {
+        sel.selectedIndex=2;
+        babylon();
+      }
+    }
 
-            if (selectText=='webgl') {
-                webgl();
-                // var script = document.createElement('script');
-                // script.src='webgl/webgl.js'
-                // script.id='webgl-js'
-                // document.appendChild(script);
+    // function setCanvas(){
+    // var select = document.getElementById("rendererSelect");
+    //   var selectText = select.options[select.selectedIndex].text;
+    //   var canvas = document.body.getElementsByTagName("canvas");
+    //   canvas[0].id = selectText;
+    //   return selectText;
+    // }
 
-                // var script1 = document.createElement('script');
-                // script1.src='webgl/gl-matrix.js'
-                // script1.id='webgl-matrix'
-                // document.appendChild(script1);
-            } else if (selectText=='three'){
-                three();
-                // var script = document.createElement('script');
-                // script.src='three/3d.js'
-                // script.id='three-js'
-                // document.appendChild(script);
-            } else {
-                babylon();
-                // var script = document.createElement('script');
-                // script.src='babylon/bab.js'
-                // script.id='babylon-js'
-                // document.appendChild(script);
-            }
+    function switchRenderer() {
+        var select = document.getElementById("rendererSelect");
+      var selectText = select.options[select.selectedIndex].text;
+      console.log(getURLPath);
+      if (selectText == "webgl") {
+        window.location = getURLPath()+'?select=webgl'
+        webgl();
+        // var script = document.createElement('script');
+        // script.src='webgl/webgl.js'
+        // script.id='webgl-js'
+        // document.appendChild(script);
 
-        }
-    </script>
+        // var script1 = document.createElement('script');
+        // script1.src='webgl/gl-matrix.js'
+        // script1.id='webgl-matrix'
+        // document.appendChild(script1);
+      } else if (selectText == "three") {
+        console.log("correctly to three");
+        window.location = getURLPath()+'?select=three'
 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.js'></script>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
-    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+        three();
+        // var script = document.createElement('script');
+        // script.src='three/3d.js'
+        // script.id='three-js'
+        // document.appendChild(script);
+      } else {
+        window.location = getURLPath()+'?select=babylon'
 
+        babylon();
+        // var script = document.createElement('script');
+        // script.src='babylon/bab.js'
+        // script.id='babylon-js'
+        // document.appendChild(script);
+      }
+    }
+  </script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.js"></script>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
 
-    <script src="file.js"></script>
+  <script src="file.js"></script>
 
-    <script id='webgl-matrix' src="webgl/gl-matrix.js"></script>
-    <script id='webgl-js'src="webgl/webgl.js"></script>
+  <script id="webgl-matrix" src="webgl/gl-matrix.js"></script>
+  <script id="webgl-js" src="webgl/webgl.js"></script>
 
-    <script src="three/3D.js"></script>
+  <script src="three/3d.js"></script>
 
-    <script src='babylon/bab.js'></script>
-
+  <script src="babylon/bab.js"></script>
 </html>
