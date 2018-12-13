@@ -3,15 +3,29 @@
   <head>
     <meta charset="utf-8">
     <title>WebGL Demo</title>
-    <link rel="stylesheet" href="webgl.css" type="text/css">
+    <link rel="stylesheet" href="webgl/webgl.css" type="text/css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
   </head>
 
-  <body>
+  <body onload='initSelect()'>
     <div class="full-height row ">
-        <canvas class='col-sm ' id="glcanvas"></canvas>
-
+        <div class="col-sm">
+            <div class="row">
+        <form class='col-6'>
+                <div class="form-group">
+                        <label for="exampleFormControlSelect1">Select engine</label>
+                        <select class="form-control" id="rendererSelect" onfocus='getOldSelect()'  onchange='switchRenderer()'>
+                          <option>webgl</option>
+                          <option selected>three</option>
+                          <option>babylon</option>
+                        </select>
+                      </div>
+        </form>
+                <button class='col-6' type='button' onclick='reload()'>Re-render</button>
+        </div>
+        <canvas class='col-sm' id="three"></canvas>
+    </div>
         <div class="col-sm full-height">
             <div class="row">
             <div class="col-4">
@@ -47,9 +61,7 @@
             </div>
         </div>
             </div>
-            <div class="row">
-                    <p>nothing for now</p>
-            </div>
+
         </div>
     </div>
 
@@ -59,8 +71,89 @@
 
 
   </body>
+  <script>
 
-  <script src="gl-matrix.js"></script>
+      var previousSelect="webgl";
+        function reload(){
+          console.log('reredner');
+          readTextArea('paramsarea');
+        }
+
+        function getOldSelect(){
+            var select=document.getElementById('rendererSelect');
+           previousSelect=select.options[select.selectedIndex].text;
+           console.log('old select is ', previousSelect);
+
+        }
+        
+        function initSelect(){
+            console.log('init');
+            // webgl();
+            three();
+        }
+
+        function switchRenderer(){
+            var select=document.getElementById('rendererSelect');
+            var selectText=select.options[select.selectedIndex].text;
+            var canvas=document.body.getElementsByTagName('canvas');
+            canvas[0].id = selectText;
+            if (previousSelect=='webgl') {
+                clearWebgl();
+            //     var script = document.getElementById('webgl-matrix');
+            //     document.removeChild(script);
+            //     var script1 = document.getElementById('webgl-js');
+            //     document.removeChild(script1);
+            } else if (previousSelect=='three'){
+                clearThree();
+            //     var script = document.getElementById('three-js');
+            //     document.removeChild(script);
+            } else {
+            //     var script = document.getElementById('babylon-js');
+            //     document.appendChild(script);
+            }
+
+            if (selectText=='webgl') {
+                webgl();
+                // var script = document.createElement('script');
+                // script.src='webgl/webgl.js'
+                // script.id='webgl-js'
+                // document.appendChild(script);
+
+                // var script1 = document.createElement('script');
+                // script1.src='webgl/gl-matrix.js'
+                // script1.id='webgl-matrix'
+                // document.appendChild(script1);
+            } else if (selectText=='three'){
+                three();
+                // var script = document.createElement('script');
+                // script.src='three/3d.js'
+                // script.id='three-js'
+                // document.appendChild(script);
+            } else {
+                babylon();
+                // var script = document.createElement('script');
+                // script.src='babylon/bab.js'
+                // script.id='babylon-js'
+                // document.appendChild(script);
+            }
+
+        }
+    </script>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.js'></script>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+
+
+
     <script src="file.js"></script>
-    <script src="webgl.js"></script>
+
+    <script id='webgl-matrix' src="webgl/gl-matrix.js"></script>
+    <script id='webgl-js'src="webgl/webgl.js"></script>
+
+    <script src="three/3D.js"></script>
+
+    <script src='babylon/bab.js'></script>
+
 </html>

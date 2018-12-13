@@ -52,7 +52,7 @@ function readSingleFile(evt,textId,callback) {
         // for(var line=0;line<lines.length;line++){
         //     console.log(lines[line]);
         // }
-        callback(cache);
+        callback(textId);
       }
       r.readAsText(f);
       console.log('cache after read');
@@ -64,32 +64,36 @@ function readSingleFile(evt,textId,callback) {
   }
 
 
-  function saveTextAsFile(textAreaId)
+  function saveTextAsFile(textAreaId,filenameId)
   {
-    var textToWrite = document.getElementById(textAreaId).innerHTML;
+    var textToWrite = document.getElementById(textAreaId).value;
     var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-      var fileNameToSaveAs = "note.html";
+      var fileNameToSaveAs = document.getElementById(filenameId).value;
 
       var downloadLink = document.createElement("a");
       downloadLink.download = fileNameToSaveAs;
       downloadLink.innerHTML = "Download File";
-        console.log('hte file is ',fileNameToSaveAs);
+        console.log('hte file is ',filenameId,fileNameToSaveAs);
       downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+      document.body.appendChild(downloadLink);
       downloadLink.click();
+      document.body.removeChild(downloadLink);
   };
 
+function readTextArea(textareaId){
+    console.log('inside callback cache');
+    var textArea = document.getElementById(textareaId);
+    var lines=textArea.value.split('\n');
+    for(var line=0;line<lines.length;line++){
+        console.log(lines[line]);
+        getParameters(params,lines[line]);
+    }
+}
 
 
 function loadParameters(evt){  
     console.log('load parame');
-    readSingleFile(evt,'paramsarea',function(cache){
-        console.log('inside callback cache');
-        var lines=cache.split('\n');
-        for(var line=0;line<lines.length;line++){
-            console.log(lines[line]);
-            getParameters(params,lines[line]);
-        }
-    });
+    readSingleFile(evt,'paramsarea',readTextArea);
 }
 
 function loadVertexShader(evt){
@@ -117,13 +121,13 @@ function loadFragmentShader(evt){
 }
 
 function saveParameters(evt){
-    saveTextAsFile('paramsarea');
+    saveTextAsFile('paramsarea','paramsname');
 }
 function saveVertexShader(evt){
-    saveTextAsFile('vertexarea');
+    saveTextAsFile('vertexarea','vertexname');
 }
 function saveFragmentShader(evt){
-    saveTextAsFile('fragmentarea');
+    saveTextAsFile('fragmentarea','fragmentname');
 }
 function getParameters(parameters,line){
     var pair=line.split('=');

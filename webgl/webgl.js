@@ -1,3 +1,10 @@
+function clearWebgl(){
+  const canvas = document.querySelector('#webgl');
+  const gl = canvas.getContext('webgl', { antialias: true, stencil: true });
+  gl.clear();
+}
+
+function webgl(){
 var cubeRotation = 0.0;
 
 main();
@@ -5,9 +12,10 @@ main();
 //
 // Start here
 //
+
 function main() {
-  const canvas = document.querySelector('#glcanvas');
-  const gl = canvas.getContext('webgl', { antialias: false, stencil: true });
+  const canvas = document.querySelector('#webgl');
+  const gl = canvas.getContext('webgl', { antialias: true, stencil: true });
 
   // If we don't have a GL context, give up now
 
@@ -348,4 +356,7 @@ function loadShader(gl, type, source) {
   }
 
   return shader;
+}
+
+
 }
